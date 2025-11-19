@@ -1,8 +1,8 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
-import { AppProviders } from "@/app/providers/AppProviders";
-import { env } from "@/lib/env";
+import { AppProviders } from "./app/providers/AppProviders.tsx";
+import { env } from "./lib/env";
 
 const rootElement = document.getElementById("root");
 
@@ -26,7 +26,7 @@ const renderApp = () => {
 
 const bootstrap = async () => {
   if (env.useMocks) {
-    const { startMockWorker } = await import("@/mocks/browser");
+    const { startMockWorker } = await import("./mocks/browser");
     await startMockWorker();
   }
   renderApp();

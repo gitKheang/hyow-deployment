@@ -11,18 +11,16 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/sonner";
 import { Shield, Eye, EyeOff } from "lucide-react";
 
-const registerSchema = z
-  .object({
-    first_name: z.string().min(2, "First name must be at least 2 characters"),
-    last_name: z.string().min(2, "Last name must be at least 2 characters"),
-    email: z.string().email("Invalid email address"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
+const registerSchema = z.object({
+  first_name: z.string().min(2, "First name must be at least 2 characters"),
+  last_name: z.string().min(2, "Last name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
 
 type RegisterForm = z.infer<typeof registerSchema>;
 
@@ -46,9 +44,12 @@ const Register = () => {
   const onSubmit = async (data: RegisterForm) => {
     setIsLoading(true);
     try {
+      // TODO: Replace with actual API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
-
+      
       toast.success("Registration successful! Please verify your email.");
+      
+      // Navigate to verify email page with email in state
       navigate("/auth/verify-email", { state: { email: data.email } });
     } catch (error) {
       toast.error("Registration failed. Please try again.");
@@ -60,21 +61,23 @@ const Register = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-
-      <div className="container mx-auto px-4 py-16 flex items-center justify-center">
+      
+      <div className="container mx-auto flex items-center justify-center px-4 py-12 sm:py-16">
         <Card className="w-full max-w-lg">
           <CardHeader className="space-y-3 text-center">
             <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
               <Shield className="h-6 w-6 text-primary" />
             </div>
             <CardTitle className="text-2xl">Create Your Account</CardTitle>
-            <CardDescription>Get started with HYOW and secure your web applications</CardDescription>
+            <CardDescription>
+              Get started with HYOW and secure your web applications
+            </CardDescription>
           </CardHeader>
 
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5">
+                <div className="grid gap-4 sm:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="first_name"
@@ -167,7 +170,11 @@ const Register = () => {
                             className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground"
                             aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
                           >
-                            {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                            {showConfirmPassword ? (
+                              <EyeOff className="h-4 w-4" />
+                            ) : (
+                              <Eye className="h-4 w-4" />
+                            )}
                           </button>
                         </div>
                       </FormControl>

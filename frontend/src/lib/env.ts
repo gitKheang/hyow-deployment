@@ -10,5 +10,5 @@ const normalizeBoolean = (value: string | undefined, defaultValue: boolean) => {
 
 export const env = {
   apiBaseUrl: import.meta.env.VITE_API_URL ?? DEFAULT_API_BASE,
-  useMocks: normalizeBoolean(import.meta.env.VITE_USE_MOCKS, false),
+  useMocks: normalizeBoolean(import.meta.env.VITE_USE_MOCKS, true),
 };

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -22,6 +22,7 @@ type LoginForm = z.infer<typeof loginSchema>;
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<LoginForm>({
@@ -36,10 +37,17 @@ const Login = () => {
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true);
     try {
+      // TODO: Replace with actual API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
+      if (typeof window !== "undefined") {
+        localStorage.setItem("hyow_session", JSON.stringify({ email: data.email, createdAt: Date.now() }));
+      }
+
       toast.success("Login successful!");
-      navigate("/app/dashboard");
+      const redirectTo =
+        (location.state as { redirect?: string } | null)?.redirect ?? "/app/dashboard";
+      navigate(redirectTo, { replace: true });
     } catch (error) {
       toast.error("Invalid credentials. Please try again.");
     } finally {
@@ -50,15 +58,17 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-
-      <div className="container mx-auto px-4 py-16 flex items-center justify-center">
+      
+      <div className="container mx-auto flex items-center justify-center px-4 py-12 sm:py-16">
         <Card className="w-full max-w-md">
           <CardHeader className="space-y-3 text-center">
             <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
               <Shield className="h-6 w-6 text-primary" />
             </div>
             <CardTitle className="text-2xl">Welcome Back</CardTitle>
-            <CardDescription>Sign in to your HYOW account</CardDescription>
+            <CardDescription>
+              Sign in to your HYOW account
+            </CardDescription>
           </CardHeader>
 
           <CardContent>
@@ -85,7 +95,10 @@ const Login = () => {
                     <FormItem>
                       <div className="flex items-center justify-between">
                         <FormLabel>Password</FormLabel>
-                        <Link to="/auth/forgot-password" className="text-sm text-primary hover:underline">
+                        <Link 
+                          to="/auth/forgot-password" 
+                          className="text-sm text-primary hover:underline"
+                        >
                           Forgot password?
                         </Link>
                       </div>
@@ -101,11 +114,16 @@ const Login = () => {
                   control={form.control}
                   name="rememberMe"
                   render={({ field }) => (
-                    <FormItem className="flex items-center space-x-2 space-y-0">
+                    <FormItem className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
                       <FormControl>
-                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
                       </FormControl>
-                      <FormLabel className="text-sm font-normal cursor-pointer">Remember me</FormLabel>
+                      <FormLabel className="text-sm font-normal cursor-pointer">
+                        Remember me
+                      </FormLabel>
                     </FormItem>
                   )}
                 />

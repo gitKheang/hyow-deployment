@@ -11,11 +11,11 @@
     "resolvePackageJsonExports": true,
     "resolvePackageJsonImports": true,
     "isolatedModules": true,
+    "noEmit": true,
     "verbatimModuleSyntax": true,
     "skipLibCheck": true,
     "strict": true,
-    "types": ["node"],
-    "noEmit": true,
+    "types": ["node"]
   },
   "include": ["vite.config.ts"]
 }
