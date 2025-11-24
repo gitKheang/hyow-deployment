@@ -80,7 +80,7 @@ export const Header = () => {
         </Link>
 
         <div className="flex items-center gap-3">
-          {!isAppRoute ? (
+          {!isAppRoute && !isAuthenticated ? (
             <div className="flex items-center gap-3">
               <Button variant="ghost" size="sm" asChild>
                 <Link to="/auth/login">Sign in</Link>
